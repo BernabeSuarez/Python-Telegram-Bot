@@ -1,4 +1,4 @@
-# Bot de Telegram para Consultas sobre Tatuajes
+# Bot de Telegram para Consultas sobre Tatuajes(en proceso...)
 
 Este es un bot de Telegram creado en Python para ofrecer información sobre turnos, costos y cuidados relacionados con tatuajes.
 
