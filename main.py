@@ -1,11 +1,28 @@
 import os
 from dotenv import load_dotenv
 import telebot
-
+import google.generativeai as genai
 
 load_dotenv()
 
 bot = telebot.TeleBot(os.getenv("TELEGRAM_API_TOKEN"))
+
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+# ver la lista de modelos de Gemini
+# for m in genai.list_models():
+#     if "generateContent" in m.supported_generation_methods:
+#         print(m.name)
+
+# model = genai.GenerativeModel("gemini-pro")
+# response = model.generate_content("What is the meaning of life?")
+# print(response.text)
+
+
+def gemini_consult(query):
+    model = genai.GenerativeModel("gemini-pro")
+    response = model.generate_content(query)
+    return response.text
 
 
 # responder a los comandos
@@ -14,38 +31,24 @@ def cmd_start(message):
     """mensaje de bienvenida del bot"""
     bot.send_message(
         message.chat.id,
-        "Hola! Bienvenido, soy un bot, te paso una lista de las cosas que puedo ayudarte: \n responde:\n 1: si quieres un turno para tatuarte\n 2: Si quieres saber el costo de un tatuaje \n 3: Si quieres conocer los cuidados recomendados para tu nuevo tatuaje.\n 4 : Para salir",
+        "Hola Soy una Inteligencia artificial, puedes consultarme sobre lo que quieras saber",
     )
 
 
 # responder a los mensajes
 @bot.message_handler(content_types=["text"])
 def resp_msj(message):
-    """Intereactua con los mensajes recibidos"""
-    if message.text.startswith("/"):
-        bot.send_message(message.chat.id, "Comando no disponible por el momento...")
-    else:
-        # lo que respondera a los textos
-        if message.text.startswith("1"):
+    try:
+        if message.text.lower() == "gracias":
             bot.send_message(
                 message.chat.id,
-                "Para reservar un turno, enviar un mensaje al 2364513422, con la idea a realizar, si hay alguna imagen de referencia, tamaño aproximado o lugar del cuerpo a realizar el tatuaje",
+                "De nada, si necesitas cualquier cosa escribe comando /start",
             )
-        elif message.text.startswith("2"):
-            bot.send_message(
-                message.chat.id,
-                "Para presupuestar un tatuaje, es necesario saber el tamaño aproximado, y el diseño, partiendo de que hay un costo minimo fijo de base",
-            )
-        elif message.text.startswith("3"):
-            bot.send_message(
-                message.chat.id,
-                "Los cuidados basicos son: No rascar, ni quitar la cascara, ponerle crema, y dejarse de hinchar las pelotas con el agua, pileta o mar",
-            )
-        elif message.text.startswith("4"):
-            bot.send_message(
-                message.chat.id,
-                "Muchas gracias por contactarte",
-            )
+        else:
+            response = gemini_consult(message.text)
+            bot.send_message(message.chat.id, response)
+    except ValueError:
+        print("Ha ocurrido un error", ValueError)
 
 
 # Iniciar el bot
