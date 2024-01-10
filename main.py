@@ -26,12 +26,30 @@ def gemini_consult(query):
 
 
 # responder a los comandos
-@bot.message_handler(commands=["start", "ayuda"])
+@bot.message_handler(commands=["start"])
 def cmd_start(message):
     """mensaje de bienvenida del bot"""
     bot.send_message(
         message.chat.id,
-        "Hola Soy una Inteligencia artificial, puedes consultarme sobre lo que quieras saber",
+        "Hola soy un bot, puedes ingresar comando /cuidados para ver el cuidado de un tatuaje nuevo, comando /significado para conocer el significado de tatuajes, pero ademas como Soy una Inteligencia artificial, puedes consultarme sobre lo que quieras saber",
+    )
+
+
+@bot.message_handler(commands=["significado"])
+def cmd_significado(message):
+    """responde al comando significado"""
+    bot.send_message(
+        message.chat.id,
+        "Para consultar el significado de un tatuaje, escribe significado de tatuajes de, y el tatuaje que te interresa",
+    )
+
+
+@bot.message_handler(commands=["cuidados"])
+def cmd_significado(message):
+    """responde al comando cuidados"""
+    bot.send_message(
+        message.chat.id,
+        "Para cuidar tu tatuaje nuevo:\nQuitar el film, y enjuagar con agua.\nDejar descubierto y poner una fina capa de crema.\n No rascar, ni quitar la cascara \n No exponer al sol, agua de mar o pileta\n continuar los cuidados por dos semanas\n",
     )
 
 
